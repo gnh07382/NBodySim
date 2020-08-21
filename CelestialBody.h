@@ -12,14 +12,15 @@
 class Planet 
 {
 public:
-	Planet(std::string ParentBody, double mass, double EquatorialRotationVel, glm::dvec3 AxialTilt, double Radius)
-		:ParentBody(ParentBody), mass(mass), EquatorialRotationVel(EquatorialRotationVel), AxialTilt(AxialTilt), Radius(Radius)
+	Planet(std::string Name, std::string ParentBody, double mass, double EquatorialRotationVel, glm::dvec3 AxialTilt, double Radius)
+		:Name(Name), ParentBody(ParentBody), mass(mass), EquatorialRotationVel(EquatorialRotationVel), AxialTilt(AxialTilt), Radius(Radius)
 	{}
 	
 	std::vector <glm::dvec3> PositionPredict;
 	std::vector <glm::dvec3> VelocityPredict;
 
 	std::string ParentBody;
+	std::string Name;
 
 	double mass;
 	double EquatorialRotationVel;
