@@ -6,6 +6,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
+#include "Integrator.h"
+
 class Space 
 {
 private:
