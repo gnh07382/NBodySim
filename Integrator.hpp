@@ -76,29 +76,25 @@ private:
 	};
 
 public:
-	SymplecticForestRuth()
-	{
-	
-	}
+	SymplecticForestRuth();
 
 	template <typename Dynamics>
-	void do_step(Dynamics& accel, Data& q, Data& dxdt, Data& p, double t, double dt)
+	void do_step(Dynamics& system, Data& q, Data& p, Data& d2xdt2, double dt)
 	{
-		
-		for (auto& const [qi, pi] : boost::combine(q, p))//Boost를 쓰던가 해야될듯
+		for (auto& const [qi, pi, d2xdt2i] : boost::combine(q, p, d2xdt2))//Boost를 쓰던가 해야될듯
 		{
 			//q:위치, p: 속도
 			double q1, q2, q3, q4;
 			double p1, p2, p3, p4;
 
 			q1 = qi + c[0] * p * dt;
-			p1 = pi + d[0] * accel(q1) * dt;
+			p1 = pi + d[0] * d2xdt2 * dt;
 			q2 = q1 + c[1] * p1 * dt;
-			p2 = p1 + d[1] * accel(q2) * dt;
+			p2 = p1 + d[1] * d2xdt2 * dt;
 			q3 = q2 + c[2] * p2 * dt;
-			p3 = p2 + d[2] * accel(q3) * dt;
+			p3 = p2 + d[2] * d2xdt2 * dt;
 			q4 = q3 + c[3] * p3 * dt;
-			p4 = q3 + d[3] * accel(q4) * dt;
+			p4 = q3 + d[3] * d2xdt2 * dt;
 
 			qi = q4;
 			pi = p4;
