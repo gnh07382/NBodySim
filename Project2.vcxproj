@@ -152,6 +152,7 @@
     <ClCompile Include="..\..\glad(1)\src\glad.c" />
     <ClCompile Include="CelestialBody.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Space.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="Space.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs" />

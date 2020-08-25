@@ -24,6 +24,9 @@
     <ClCompile Include="CelestialBody.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Space.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
@@ -42,6 +45,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Integrator.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

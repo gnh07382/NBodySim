@@ -46,7 +46,7 @@ public:
 			double k1, k2, k3, k4;
 
 			k1 = dt * system(xi, dxdti);
-			k2 = dt * system(xi+k1/2.0, dxdti);
+			k2 = dt * system(xi + k1 / 2.0, dxdti);
 			k3 = dt * system(xi + k2 / 2.0, dxdti);
 			k4 = dt * system(xi + k3, dxdti);
 
