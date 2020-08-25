@@ -351,4 +351,4 @@ MigrationBackup/
 
 #user Ignore
 *.c
-assimp-vc142-mdt.dll
+assimp-vc142-mtd.dll
