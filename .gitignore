@@ -351,4 +351,5 @@ MigrationBackup/
 
 #user Ignore
 *.c
-assimp-vc142-mtd.dll
+*.dll
+stb_image.h
