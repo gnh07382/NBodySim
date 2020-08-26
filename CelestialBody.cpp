@@ -9,4 +9,5 @@ Planet::Planet(std::string Name, double mass, double EquatorialRotationVel, glm:
 void Planet::ParentBodyInfo(Planet parent)
 {
 	ParentPositionPredict = parent.PositionPredict;
+	parent.exist = true;
 }
