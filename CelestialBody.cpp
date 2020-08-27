@@ -10,4 +10,5 @@ void Planet::ParentBodyInfo(Planet parent)
 {
 	ParentPositionPredict = parent.PositionPredict;
 	parent.exist = true;
+	parentmass = parent.PlanetMass;
 }

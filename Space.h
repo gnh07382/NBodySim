@@ -31,15 +31,13 @@ public:
 
 	void Ephemeris(Planet planet, int TimeStep);//ephemeris: 천체력, 움직임 담당 
 
-	void SetReferencePlanet(Planet ReferencePlanet, int ReferenceFrameMode);
+	void CelestialSurfaceFrame(Planet TargetPlanet, Planet ReferencePlanet);//surface frame
 
-	void CelestialSurfaceFrame(Planet TargetPlanet);//surface frame
+	void CelestialCenteredInertialFrame(Planet TargetPlanet, Planet ReferencePlanet);//ECI
 
-	void CelestialCenteredInertialFrame(Planet TargetPlanet);//ECI
+	void BarycentreAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet);//EMB
 
-	void BarycentreAlignedFrame(Planet TargetPlanet);//EMB
-
-	void CelestialCenteredAlignedFrame(Planet TargetPlanet);//ECSA
+	void CelestialCenteredAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet);//ECSA
 };
 
 #endif // !SPACE_H

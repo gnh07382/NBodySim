@@ -29,6 +29,7 @@ public:
 
 	void ParentBodyInfo(Planet parent);
 	std::vector <glm::dvec3> ParentPositionPredict;
+	double parentmass;
 
 	std::string Name;
 
@@ -80,11 +81,12 @@ public:
 
 			boost::tie(Mass, Dist) = i;
 			
-			d2xdt2.x -= G * Mass * masslist.at(k) * (Dist.x - q.x) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
-			d2xdt2.y -= G * Mass * masslist.at(k) * (Dist.y - q.y) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
-			d2xdt2.z -= G * Mass * masslist.at(k) * (Dist.z - q.z) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
-			
-			k++;
+			for (auto const& Mass2 : masslist) 
+			{
+				d2xdt2.x -= G * Mass * Mass2 * (Dist.x - q.x) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
+				d2xdt2.y -= G * Mass * Mass2 * (Dist.y - q.y) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
+				d2xdt2.z -= G * Mass * Mass2 * (Dist.z - q.z) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
+			}
 		}
 	}
 };

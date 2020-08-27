@@ -18,60 +18,50 @@ void Space::Ephemeris(Planet planet, int TimeStep)
 	}
 	planet.calculated = true;
 }
-void Space::SetReferencePlanet(Planet ReferencePlanet, int ReferenceFrameMode)
+void Space::CelestialSurfaceFrame(Planet TargetPlanet, Planet ReferencePlanet)//referenceframemode = 1
 {
-	if (ReferenceFrameMode==1)
+	if (TargetPlanet.calculated == true)
 	{
 
 	}
-	else if (ReferenceFrameMode==2)
+}
+void Space::CelestialCenteredInertialFrame(Planet TargetPlanet, Planet ReferencePlanet)//referenceframemode = 2
+{
+	if (TargetPlanet.calculated == true)
 	{
-		for (auto pos : ReferencePlanet.PositionPredict)
+		for (auto const& i : boost::combine(ReferencePlanet.PositionPredict, TargetPlanet.PositionPredict))
+		{
+			state_type refpos;
+			state_type trgpos;
+			boost::tie(refpos, trgpos) = i;
+
+			TargetPlanet.ReferenceFramePositionPredict.push_back(trgpos-refpos);
+		}
+	}
+}
+void Space::BarycentreAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet)//referenceframemode = 3
+{
+	if (TargetPlanet.calculated == true)
+	{
+		for (auto const& i : boost::combine(ReferencePlanet.PositionPredict, ReferencePlanet.ParentPositionPredict))
+		{
+			state_type pos;
+			state_type parentpos;
+			boost::tie(pos, parentpos) = i;
+
+			ReferenceFramePos = ReferencePlanet.parentmass / ReferencePlanet.PlanetMass + ReferencePlanet.parentmass * (pos - parentpos);
+
+
+		}
+	}
+}
+void Space::CelestialCenteredAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet)//referenceframemode = 4
+{
+	if (TargetPlanet.calculated == true)
+	{
+		for (auto const& pos : ReferencePlanet.PositionPredict)
 		{
 			ReferenceFramePos = pos;
 		}
-	}
-	else if (ReferencePlanet.parentexist && ReferenceFrameMode==3)
-	{
-		for (auto pos : ReferencePlanet.PositionPredict)
-		{
-			ReferenceFramePos = pos;
-		}
-	}
-	else if (ReferencePlanet.parentexist && ReferenceFrameMode == 4)
-	{
-		for (auto pos : ReferencePlanet.PositionPredict)
-		{
-			ReferenceFramePos = pos;
-		}
-	}
-	else{}
-}
-void Space::CelestialSurfaceFrame(Planet TargetPlanet)//referenceframemode = 1
-{
-	if (TargetPlanet.calculated == true)
-	{
-
-	}
-}
-void Space::CelestialCenteredInertialFrame(Planet TargetPlanet)//referenceframemode = 2
-{
-	if (TargetPlanet.calculated == true)
-	{
-
-	}
-}
-void Space::BarycentreAlignedFrame(Planet TargetPlanet)//referenceframemode = 3
-{
-	if (TargetPlanet.calculated == true)
-	{
-
-	}
-}
-void Space::CelestialCenteredAlignedFrame(Planet TargetPlanet)//referenceframemode = 4
-{
-	if (TargetPlanet.calculated == true)
-	{
-
 	}
 }
