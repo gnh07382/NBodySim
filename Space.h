@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <boost/qvm/quat_operations.hpp>
+
 #include <vector>
 #include <string>
 #include "Integrator.hpp"
@@ -18,6 +20,7 @@ private:
 	double StepSize;
 
 	glm::dvec3 ReferenceFramePos;
+	glm::dvec3 ReferenceVector;
 	const glm::dvec3 InitReferenceFrame = { 0.0, 0.0, 0.0 };
 
 	template<typename RET, typename VEC>

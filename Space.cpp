@@ -43,13 +43,16 @@ void Space::BarycentreAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet)/
 {
 	if (TargetPlanet.calculated == true)
 	{
-		for (auto const& i : boost::combine(ReferencePlanet.PositionPredict, ReferencePlanet.ParentPositionPredict))
+		for (auto const& i : boost::combine(ReferencePlanet.PositionPredict, TargetPlanet.PositionPredict, ReferencePlanet.VelocityPredict, TargetPlanet.VelocityPredict))
 		{
 			state_type pos;
-			state_type parentpos;
-			boost::tie(pos, parentpos) = i;
+			state_type TargetPos;
+			state_type vel;
+			state_type TargetVel;
+			boost::tie(pos, TargetPos, vel, TargetVel) = i;
 
-			ReferenceFramePos = ReferencePlanet.parentmass / ReferencePlanet.PlanetMass + ReferencePlanet.parentmass * (pos - parentpos);
+			ReferenceFramePos = TargetPlanet.PlanetMass / (ReferencePlanet.PlanetMass + TargetPlanet.PlanetMass) * (pos - TargetPos);
+			ReferenceVector = vel - TargetVel;
 
 
 		}
