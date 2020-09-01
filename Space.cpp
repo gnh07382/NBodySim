@@ -7,12 +7,12 @@ Space::Space(double StepSize)
 }
 void Space::Ephemeris(Planet planet, int TimeStep)
 {
-	Move move;
+	Move move();
 	SymplecticForestRuth<state_type> symplectic;
 
-	for (int i = 1; i <= TimeStep; i++)
+	for (int i = 1; i < TimeStep; i++)
 	{
-		symplectic.do_step(move, planet.PositionPredict.at(0), planet.VelocityPredict.at(0), move.d2xdt2, StepSize);
+		symplectic.do_step(move, planet.PositionPredict.at(i-1), planet.VelocityPredict.at(i-1), move.d2xdt2, StepSize);
 		planet.PositionPredict.push_back(planet.PositionPredict.at(i));
 		planet.VelocityPredict.push_back(planet.VelocityPredict.at(i));
 	}
@@ -54,7 +54,7 @@ void Space::BarycentreAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet)/
 			ReferenceFramePos = TargetPlanet.PlanetMass / (ReferencePlanet.PlanetMass + TargetPlanet.PlanetMass) * (pos - TargetPos);
 			ReferenceVector = vel - TargetVel;
 
-
+			//일단 기본 출력부터 해보고 나중에 만들어보기
 		}
 	}
 }

@@ -27,9 +27,9 @@ public:
 
 	std::vector <glm::dvec3> ReferenceFramePositionPredict;
 
-	void ParentBodyInfo(Planet parent);
-	std::vector <glm::dvec3> ParentPositionPredict;
-	double parentmass;
+	//void ParentBodyInfo(Planet parent);
+	//std::vector <glm::dvec3> ParentPositionPredict;
+	//double parentmass;
 
 	std::string Name;
 
@@ -67,7 +67,7 @@ private:
 	}
 
 public:
-	Move();
+	Move(std::vector<double> masslist, std::vector<glm::dvec3> distlist) : masslist(masslist), distlist(distlist) {}
 
 	state_type d2xdt2;
 

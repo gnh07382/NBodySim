@@ -6,9 +6,9 @@ Planet::Planet(std::string Name, double mass, double EquatorialRotationVel, glm:
 	PositionPredict.at(0) = InitialPos;
 	VelocityPredict.at(0) = InitialVel;
 }
-void Planet::ParentBodyInfo(Planet parent)
+/*void Planet::ParentBodyInfo(Planet parent)
 {
 	ParentPositionPredict = parent.PositionPredict;
 	parent.exist = true;
 	parentmass = parent.PlanetMass;
-}
+}*/

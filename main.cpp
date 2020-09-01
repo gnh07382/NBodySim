@@ -8,6 +8,8 @@
 #include "camera.h"
 #include "model.h"
 
+#include "Space.h"
+
 #pragma warning(disable: c26451)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -25,24 +27,6 @@ bool firstMouse = true;
 
 double deltaTime = 0.0f;
 double lastFrame = 0.0f;
-
-template <typename T>
-T Kepler1(T r, T D_Theta, T GM)
-{
-    return (r * D_Theta * D_Theta) - (GM / (r * r));
-};
-
-template <typename U>
-U Kepler2(U r, U D_Theta, U D_R)
-{
-    return -2.0 * D_Theta * D_R / r;
-};
-
-template<typename V>
-V Euler(V currentval, V deltaT, V deriv)
-{
-    return currentval + deltaT * deriv;
-};
 
 int main()
 {
@@ -75,19 +59,43 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader Shader("shader.vs", "shader.fs");
+    Shader Shader("planetvertex.glsl", "planetfrag.frag");
 
-    Model Model1("Earth/Earth.obj");
-    Model Model2("Moon/Moon.obj");
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    Model model[5] = 
+    {
+        {"Jupiter.obj"},
+        {"Io.obj"},
+        {"Europa.obj"},
+        {"Ganymede.obj"},
+        {"Callisto.obj"},
+    };
+ 
+    //SI unit 쓰기(kg, m)
+    //순서: 이름 질량 자전속도(rad/s) AxialTilt 지름 위치 속도 
+    Planet planet[5] = 
+    {
+        {"Jupiter", 1.89813e+27, 0.00017585, glm::dvec3(0.0, 0.0, 0.0), 71492000.0,
+        glm::dvec3(1.339363988310993E+05,  9.092405264331063E+04,  5.073445722988616E+03),
+        glm::dvec3(-1.217066061792022E-00,  4.484495409373950E-01, -2.501334739871315E-04)},
+        
+        {"Io", 8.919e+22, 0.0, glm::dvec3(0.0, 0.0, 0.0), 1821300.0, 
+        glm::dvec3(1.783588628428087E+08, -3.813132022198399E+08, -1.122969170963552E+07), 
+        glm::dvec3(1.575622234571306E+04,  7.274824411696751E+03,  5.017042541746966E+02)},
+        
+        {"Europa", 4.799e+22, 0.0, glm::dvec3(0.0, 0.0, 0.0), 1565000.0, 
+         glm::dvec3(1.090756855262995E+08,  6.563612022517135E+08,  2.839224074616516E+07),
+         glm::dvec3(-1.364656326617821E+04,  2.353365332781587E+03, -2.039139274185915E+02)},
+        
+        {"Ganymede", 1.482e+23, 0.0, glm::dvec3(0.0, 0.0, 0.0), 2634000.0,
+         glm::dvec3(-4.970886905251951E+08, -9.460581334912166E+08, -4.271837978299236E+07),
+         glm::dvec3(9.645972005561218E+03, -5.046466898601443E+03, -6.028417363952232E+01)},
+        
+        {"Callisto", 1.076e+23, 0.0, glm::dvec3(0.0, 0.0, 0.0), 2403000.0,
+         glm::dvec3(-1.875550445329819E+09, -2.777401160541600E+08, -3.403549534719028E+07),
+         glm::dvec3(1.199591768065817E+03, -8.051860690784368E+03, -2.380699073063166E+02)}
+    };
 
-    double distance = 10.0;
-    double distance_speed = 0;
-    double distance_accel;
-
-    double angle = 3.14159265 / 6.0;
-    double angle_speed = 1.0;
-    double angle_accel;
+    Space space(60);//60sec step size
 
     while (!glfwWindowShouldClose(window))
     {
@@ -115,22 +123,17 @@ int main()
         Shader.setMat4("model", model1);
         Model1.Draw(Shader);
 
-        distance_accel = Kepler1(distance, distance_speed, 5.0);
-        angle_accel = Kepler2(distance, distance_speed, angle_speed);
-        distance_speed = Euler(distance_speed, deltaTime, distance_accel);
-        angle_speed = Euler(angle_speed, deltaTime, angle_accel);
-        distance = Euler(distance, deltaTime, distance_speed);
-        angle = Euler(angle, deltaTime, angle_speed);
-        
-        double x = distance * cos(angle);
-        double z = distance * sin(angle);
+        glm::mat4 model[5];
+        for (int i = 0; i < 5; i++)
+        {
+            model[i] = glm::mat4(1.0f);
+            /*
+            CDE방식으로 움직일 꺼니까 좀 더 생각해보고 구현하기,
+            예측선 함수 만들기
+            move 클래스 수정, ephemeris 코드 수정(전체 데이터 받느 부분이 이상함)
+            */
+        }
 
-        glm::mat4 model2 = glm::mat4(1.0);
-        model2 = glm::translate(model2, glm::vec3(x, 0.0, z));
-        model2 = glm::scale(model2, glm::vec3(0.2f, 0.2f, 0.2f));
-        Shader.setMat4("model", model2);
-        Model2.Draw(Shader);
-        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

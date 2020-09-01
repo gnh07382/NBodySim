@@ -158,7 +158,6 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="CelestialBody.h" />
     <ClInclude Include="Integrator.hpp" />
-    <ClInclude Include="LinearAlgebra.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="shader.h" />
@@ -166,8 +165,8 @@
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.fs" />
-    <None Include="shader.vs" />
+    <None Include="planetfrag.frag" />
+    <None Include="planetvertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

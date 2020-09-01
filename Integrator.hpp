@@ -81,8 +81,13 @@ public:
 	template <typename Dynamics>
 	void do_step(Dynamics& system, Data& q, Data& p, Data& d2xdt2, double dt)
 	{
-		for (auto& const [qi, pi, d2xdt2i] : boost::combine(q, p, d2xdt2))//Boost를 쓰던가 해야될듯
+		for (auto& const i : boost::combine(q, p, d2xdt2))//Boost를 쓰던가 해야될듯
 		{
+
+			double qi;
+			double pi;
+			double d2xdt2i;
+			boost::tie(qi, pi, d2xdt2i)=i;
 			//q:위치, p: 속도
 			double q1, q2, q3, q4;
 			double p1, p2, p3, p4;
