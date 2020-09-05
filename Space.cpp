@@ -5,9 +5,9 @@ Space::Space(double StepSize)
 	this->StepSize = StepSize;
 	ReferenceFramePos = InitReferenceFrame;
 }
-void Space::Ephemeris(Planet planet, int TimeStep)
+void Space::Ephemeris(Planet planet, int TimeStep, std::vector<double> masslist, std::vector<glm::dvec3> distlist)
 {
-	Move move();
+	Move move(masslist, distlist);
 	SymplecticForestRuth<state_type> symplectic;
 
 	for (int i = 1; i < TimeStep; i++)

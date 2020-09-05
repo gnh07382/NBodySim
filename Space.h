@@ -32,7 +32,7 @@ private:
 public:
 	Space(double StepSize);
 
-	void Ephemeris(Planet planet, int TimeStep);//ephemeris: 천체력, 움직임 담당 
+	void Ephemeris(Planet planet, int TimeStep, std::vector<double> masslist, std::vector<glm::dvec3> distlist);//ephemeris: 천체력, 움직임 담당 
 
 	void CelestialSurfaceFrame(Planet TargetPlanet, Planet ReferencePlanet);//surface frame
 

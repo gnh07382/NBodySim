@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <thread>
 #include "shader.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,6 +28,23 @@ bool firstMouse = true;
 
 double deltaTime = 0.0f;
 double lastFrame = 0.0f;
+
+int timestep;
+int stepsize = 16000;
+
+/*
+template <typename... M>
+void SaveMass(M... Mass)
+{
+    masslist.push_back(Mass);//error
+}
+
+template <typename... D>
+void SaveDist(D... Dist)
+{
+    distlist.push_back(Dist);
+}
+*/
 
 int main()
 {
@@ -61,7 +79,7 @@ int main()
 
     Shader Shader("planetvertex.glsl", "planetfrag.frag");
 
-    Model model[5] = 
+    Model Model[5] = 
     {
         {"Jupiter.obj"},
         {"Io.obj"},
@@ -95,6 +113,9 @@ int main()
          glm::dvec3(1.199591768065817E+03, -8.051860690784368E+03, -2.380699073063166E+02)}
     };
 
+    std::vector<double> masslist;
+    std::vector<glm::dvec3> distlist;
+
     Space space(60);//60sec step size
 
     while (!glfwWindowShouldClose(window))
@@ -115,23 +136,32 @@ int main()
         Shader.setMat4("projection", projection);
         Shader.setMat4("view", view);
 
-        // render the loaded model
-        glm::mat4 model1 = glm::mat4(1.0f);
-        model1 = glm::translate(model1, glm::vec3(0.0f, 0.0f, 0.0f)); 
-        model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));	
-        //model = glm::rotate(model, (float)glm::radians(180.0), glm::vec3(0.0, 0.0, 1.0));
-        Shader.setMat4("model", model1);
-        Model1.Draw(Shader);
-
-        glm::mat4 model[5];
+        glm::dmat4 model[5];
         for (int i = 0; i < 5; i++)
         {
-            model[i] = glm::mat4(1.0f);
+            model[i] = glm::dmat4(1.0f);
+            model[i] = glm::translate(model[i], planet[i].PositionPredict.at(timestep));
+            model[i] = glm::scale(model[i], glm::dvec3(planet[i].Radius, planet[i].Radius, planet[i].Radius));
+            Shader.setMat4("model", model[i]);
+            Model[i].Draw(Shader);
             /*
             CDE방식으로 움직일 꺼니까 좀 더 생각해보고 구현하기,
             예측선 함수 만들기
             move 클래스 수정, ephemeris 코드 수정(전체 데이터 받느 부분이 이상함)
             */
+        }
+        for (int i = 0; i < stepsize; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                masslist.push_back(planet[j].PlanetMass);
+                distlist.push_back(planet[j].PositionPredict.at(timestep));
+            }
+
+            for (int j = 0; j < 5; j++)
+            {
+                space.Ephemeris(planet[j], i, masslist, distlist);
+            }
         }
 
         glfwSwapBuffers(window);
