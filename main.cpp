@@ -150,18 +150,15 @@ int main()
             move 클래스 수정, ephemeris 코드 수정(전체 데이터 받느 부분이 이상함)
             */
         }
-        for (int i = 0; i < stepsize; i++)
+        for (int j = 0; j < 5; j++)
         {
-            for (int j = 0; j < 5; j++)
-            {
-                masslist.push_back(planet[j].PlanetMass);
-                distlist.push_back(planet[j].PositionPredict.at(timestep));
-            }
+            masslist.push_back(planet[j].PlanetMass);
+            distlist.push_back(planet[j].PositionPredict.at(timestep));
+        }
 
-            for (int j = 0; j < 5; j++)
-            {
-                space.Ephemeris(planet[j], i, masslist, distlist);
-            }
+        for (int j = 0; j < 5; j++)
+        {
+            space.Ephemeris(planet[j], stepsize, planet, 5);
         }
 
         glfwSwapBuffers(window);

@@ -5,8 +5,17 @@ Space::Space(double StepSize)
 	this->StepSize = StepSize;
 	ReferenceFramePos = InitReferenceFrame;
 }
-void Space::Ephemeris(Planet planet, int TimeStep, std::vector<double> masslist, std::vector<glm::dvec3> distlist)
+void Space::Ephemeris(Planet planet, int TimeStep, Planet* allplanet, int planetnum)
 {
+	std::vector<double> masslist;
+	std::vector<glm::dvec3> distlist;
+
+	for (int i = 0; i < planetnum; i++)
+	{
+		masslist.push_back(allplanet[i].PlanetMass);
+		distlist.push_back(allplanet[i].PositionPredict.back());
+	}
+
 	Move move(masslist, distlist);
 	SymplecticForestRuth<state_type> symplectic;
 
@@ -15,6 +24,10 @@ void Space::Ephemeris(Planet planet, int TimeStep, std::vector<double> masslist,
 		symplectic.do_step(move, planet.PositionPredict.at(i-1), planet.VelocityPredict.at(i-1), move.d2xdt2, StepSize);
 		planet.PositionPredict.push_back(planet.PositionPredict.at(i));
 		planet.VelocityPredict.push_back(planet.VelocityPredict.at(i));
+	
+		distlist.clear();
+		for (int i = 0; i < planetnum; i++)
+			distlist.push_back(allplanet[i].PositionPredict.back());
 	}
 	planet.calculated = true;
 }
