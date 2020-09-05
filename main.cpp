@@ -81,11 +81,11 @@ int main()
 
     Model Model[5] = 
     {
-        {"Jupiter.obj"},
-        {"Io.obj"},
-        {"Europa.obj"},
-        {"Ganymede.obj"},
-        {"Callisto.obj"},
+        {"Celestials/Jupiter.obj"},
+        {"Celestials/Io.obj"},
+        {"Celestials/Europa.obj"},
+        {"Celestials/Ganymede.obj"},
+        {"Celestials/Callisto.obj"},
     };
  
     //SI unit 쓰기(kg, m)
@@ -117,6 +117,7 @@ int main()
     std::vector<glm::dvec3> distlist;
 
     Space space(60);//60sec step size
+    bool calculated = false;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -150,15 +151,17 @@ int main()
             move 클래스 수정, ephemeris 코드 수정(전체 데이터 받느 부분이 이상함)
             */
         }
-        for (int j = 0; j < 5; j++)
+        if (!calculated)
         {
-            masslist.push_back(planet[j].PlanetMass);
-            distlist.push_back(planet[j].PositionPredict.at(timestep));
+            for (int j = 0; j < 5; j++)
+                space.Ephemeris(planet[j], stepsize, planet, 5);
+            
+            calculated = true;
         }
 
-        for (int j = 0; j < 5; j++)
+        for (int i = 0; i < 5; i++)//draw line
         {
-            space.Ephemeris(planet[j], stepsize, planet, 5);
+            planet[i].PositionPredict;
         }
 
         glfwSwapBuffers(window);
