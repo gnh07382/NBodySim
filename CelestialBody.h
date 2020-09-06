@@ -53,41 +53,33 @@ private:
 	}
 
 	std::vector<double> masslist;
-	template <typename... M>
-	void SaveMass(M... Mass)
-	{
-		masslist.push_back(Mass);
-	}
-
 	std::vector<glm::dvec3> distlist;
-	template <typename... D>
-	void SaveDist(D... Dist)
-	{
-		distlist.push_back(Dist);
-	}
+	
+	std::vector<double> distlist_vector;
+
+	Planet& planet;
 
 public:
-	Move(std::vector<double> masslist, std::vector<glm::dvec3> distlist) : masslist(masslist), distlist(distlist) {}
+	Move(std::vector<double> masslist, std::vector<glm::dvec3> distlist, Planet& planet) : masslist(masslist), distlist(distlist), planet(planet){}
 
-	state_type d2xdt2;
-
-	void operator()(state_type& q)//이걸로 main에서 PositionPredict에 집어넣는 걸 만들거임
+	void operator()(std::vector<double>& q, std::vector<double>& d2xdt2)//이걸로 main에서 PositionPredict에 집어넣는 걸 만들거임
 	{
+		d2xdt2.push_back(0.0);
+		d2xdt2.push_back(0.0);
+		d2xdt2.push_back(0.0);
+
 		for (auto const& i : boost::combine(masslist, distlist))//공통질량중심 회전 좌표계
 		{
-			int k = 0;
 			double Mass;
-			state_type Dist;
-
+			glm::dvec3 Dist;
 			boost::tie(Mass, Dist) = i;
 			
-			for (auto const& Mass2 : masslist) 
-			{
-				d2xdt2.x -= G * Mass * Mass2 * (Dist.x - q.x) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
-				d2xdt2.y -= G * Mass * Mass2 * (Dist.y - q.y) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
-				d2xdt2.z -= G * Mass * Mass2 * (Dist.z - q.z) / pow(vector_scale<double, glm::dvec3>(Dist - q), 3);
-			}
+			d2xdt2.at(0) -= G * Mass * planet.PlanetMass * (Dist.x - q.at(0)) / pow(pow(Dist.x+q.at(0), 2)+ pow(Dist.y + q.at(1), 2)+ pow(Dist.z + q.at(2), 2), 0.5);
+			d2xdt2.at(1) -= G * Mass * planet.PlanetMass * (Dist.y - q.at(1)) / pow(pow(Dist.x + q.at(0), 2) + pow(Dist.y + q.at(1), 2) + pow(Dist.z + q.at(2), 2), 0.5);
+			d2xdt2.at(2) -= G * Mass * planet.PlanetMass * (Dist.z - q.at(2)) / pow(pow(Dist.x + q.at(0), 2) + pow(Dist.y + q.at(1), 2) + pow(Dist.z + q.at(2), 2), 0.5);
 		}
+
+		d2xdt2.clear();
 	}
 };
 

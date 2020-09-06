@@ -79,7 +79,7 @@ public:
 	SymplecticForestRuth();
 
 	template <typename Dynamics>
-	void do_step(Dynamics& system, Data& q, Data& p, Data& d2xdt2, double dt)
+	void do_step(Dynamics& system, Data& q, Data& p, Data& d2xdt2, double dt)//Data = std::vector<double>
 	{
 		for (auto& const i : boost::combine(q, p, d2xdt2))//Boost를 쓰던가 해야될듯
 		{
@@ -89,17 +89,18 @@ public:
 			double d2xdt2i;
 			boost::tie(qi, pi, d2xdt2i)=i;
 			//q:위치, p: 속도
+
 			double q1, q2, q3, q4;
 			double p1, p2, p3, p4;
 
-			q1 = qi + c[0] * p * dt;
-			p1 = pi + d[0] * d2xdt2 * dt;
+			q1 = qi + c[0] * pi * dt;
+			p1 = pi + d[0] * system(q1, d2xdt2i) * dt;
 			q2 = q1 + c[1] * p1 * dt;
-			p2 = p1 + d[1] * d2xdt2 * dt;
+			p2 = p1 + d[1] * system(q2, d2xdt2i) * dt;
 			q3 = q2 + c[2] * p2 * dt;
-			p3 = p2 + d[2] * d2xdt2 * dt;
+			p3 = p2 + d[2] * system(q3, d2xdt2i) * dt;
 			q4 = q3 + c[3] * p3 * dt;
-			p4 = q3 + d[3] * d2xdt2 * dt;
+			p4 = q3 + d[3];
 
 			qi = q4;
 			pi = p4;

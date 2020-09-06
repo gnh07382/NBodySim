@@ -88,6 +88,8 @@ int main()
         {"Celestials/Callisto.obj"},
     };
  
+    std::vector<Planet> mod;
+
     //SI unit 쓰기(kg, m)
     //순서: 이름 질량 자전속도(rad/s) AxialTilt 지름 위치 속도 
     Planet planet[5] = 

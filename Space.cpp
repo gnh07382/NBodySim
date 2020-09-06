@@ -5,31 +5,40 @@ Space::Space(double StepSize)
 	this->StepSize = StepSize;
 	ReferenceFramePos = InitReferenceFrame;
 }
-void Space::Ephemeris(Planet planet, int TimeStep, Planet* allplanet, int planetnum)
+void Space::Ephemeris(int TimeStep, std::vector<Planet>& planet, int planetnum)
 {
 	std::vector<double> masslist;
 	std::vector<glm::dvec3> distlist;
+	std::vector<double> d2xdt2;
 
-	for (int i = 0; i < planetnum; i++)
+	for (auto& const i : planet)
 	{
-		masslist.push_back(allplanet[i].PlanetMass);
-		distlist.push_back(allplanet[i].PositionPredict.back());
+		masslist.push_back(i.PlanetMass);
+		distlist.push_back(i.PositionPredict.back());
 	}
 
-	Move move(masslist, distlist);
 	SymplecticForestRuth<state_type> symplectic;
 
 	for (int i = 1; i < TimeStep; i++)
 	{
-		symplectic.do_step(move, planet.PositionPredict.at(i-1), planet.VelocityPredict.at(i-1), move.d2xdt2, StepSize);
-		planet.PositionPredict.push_back(planet.PositionPredict.at(i));
-		planet.VelocityPredict.push_back(planet.VelocityPredict.at(i));
-	
+		for (auto& const j : planet)
+		{
+			Move move(masslist, distlist, j);
+			state_type planetpospredict = dvec3Tovector(j.PositionPredict.back());
+			state_type planetvelpredict = dvec3Tovector(j.VelocityPredict.back());
+
+			symplectic.do_step(move, planetpospredict, planetvelpredict, d2xdt2, StepSize);
+			j.PositionPredict.push_back(glm::dvec3(planetpospredict.at(0)));
+			j.VelocityPredict.push_back(glm::dvec3(planetvelpredict.at(0)));
+		}
 		distlist.clear();
-		for (int i = 0; i < planetnum; i++)
-			distlist.push_back(allplanet[i].PositionPredict.back());
+
+		for (auto& const k : planet)
+		{
+			distlist.push_back(k.PositionPredict.back());
+			k.calculated = true;
+		}
 	}
-	planet.calculated = true;
 }
 void Space::CelestialSurfaceFrame(Planet TargetPlanet, Planet ReferencePlanet)//referenceframemode = 1
 {
@@ -48,7 +57,7 @@ void Space::CelestialCenteredInertialFrame(Planet TargetPlanet, Planet Reference
 			state_type trgpos;
 			boost::tie(refpos, trgpos) = i;
 
-			TargetPlanet.ReferenceFramePositionPredict.push_back(trgpos-refpos);
+		//	TargetPlanet.ReferenceFramePositionPredict.push_back(trgpos-refpos);
 		}
 	}
 }
@@ -64,8 +73,8 @@ void Space::BarycentreAlignedFrame(Planet TargetPlanet, Planet ReferencePlanet)/
 			state_type TargetVel;
 			boost::tie(pos, TargetPos, vel, TargetVel) = i;
 
-			ReferenceFramePos = TargetPlanet.PlanetMass / (ReferencePlanet.PlanetMass + TargetPlanet.PlanetMass) * (pos - TargetPos);
-			ReferenceVector = vel - TargetVel;
+		//	ReferenceFramePos = TargetPlanet.PlanetMass / (ReferencePlanet.PlanetMass + TargetPlanet.PlanetMass) * (pos - TargetPos);
+		//	ReferenceVector = vel - TargetVel;
 
 			//일단 기본 출력부터 해보고 나중에 만들어보기
 		}

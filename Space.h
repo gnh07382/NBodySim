@@ -12,7 +12,7 @@
 #include "Integrator.hpp"
 #include "CelestialBody.h"
 
-typedef glm::dvec3 state_type;
+typedef std::vector<double> state_type;
 
 class Space
 {
@@ -29,10 +29,29 @@ private:
 		return pow(pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2), 0.5);
 	}
 
+	std::vector<double> dvec3Tovector(glm::dvec3 vector)
+	{
+		std::vector<double> temp;
+		temp.push_back(vector.x);
+		temp.push_back(vector.y);
+		temp.push_back(vector.z);
+
+		return temp;
+	}
+	glm::dvec3 vectorTodvec3(std::vector<double> vec)
+	{
+		glm::dvec3 temp;
+		vec.at(0) = temp.x;
+		vec.at(1) = temp.y;
+		vec.at(2) = temp.z;
+
+		return temp;
+	}
+
 public:
 	Space(double StepSize);
 
-	void Ephemeris(Planet planet, int TimeStep, Planet* allplanet, int planetnum);//ephemeris: 천체력, 움직임 담당 
+	void Ephemeris(int TimeStep, std::vector<Planet>& planet, int planetnum);//ephemeris: 천체력, 움직임 담당 
 
 	void CelestialSurfaceFrame(Planet TargetPlanet, Planet ReferencePlanet);//surface frame
 
