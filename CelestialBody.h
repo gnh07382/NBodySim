@@ -11,7 +11,7 @@
 #include <boost/tuple/tuple.hpp>
 
 typedef glm::dvec3 state_type;
-const double G = 6.67384e-11;
+constexpr double G = 6.67384e-11;
 
 //행성 만들기만 하고 움직이는 건 딴데서 할거임
 class Planet 

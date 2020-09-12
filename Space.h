@@ -12,6 +12,20 @@
 #include "Integrator.hpp"
 #include "CelestialBody.h"
 
+/*
+
+header file explanation
+
+move planet, spacecraft...
+INCLUDE: INTEGRATOR_H(integrator), CELESTIALBODY_H(Planet information, move function)
+
+input: std::vector<planet> to ephemeris function, 
+auto update planet position, mass
+
+reference frame selection: recalcualte pre-calculated position, work in progress
+
+*/
+
 typedef std::vector<double> state_type;
 
 class Space
@@ -22,6 +36,7 @@ private:
 	glm::dvec3 ReferenceFramePos;
 	glm::dvec3 ReferenceVector;
 	const glm::dvec3 InitReferenceFrame = { 0.0, 0.0, 0.0 };
+	bool massinit = false;
 
 	template<typename RET, typename VEC>
 	RET vector_scale(VEC vector)

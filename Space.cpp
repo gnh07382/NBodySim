@@ -7,14 +7,20 @@ Space::Space(double StepSize)
 }
 void Space::Ephemeris(int TimeStep, std::vector<Planet>& planet, int planetnum)
 {
-	std::vector<double> masslist;
+	static std::vector<double> masslist;
 	std::vector<glm::dvec3> distlist;
 	std::vector<double> d2xdt2;
 
 	for (auto& const i : planet)
 	{
-		masslist.push_back(i.PlanetMass);
 		distlist.push_back(i.PositionPredict.back());
+	}
+	if (!massinit)
+	{
+		for (auto& const i : planet)
+			masslist.push_back(i.PlanetMass);
+
+		massinit = true;
 	}
 
 	SymplecticForestRuth<state_type> symplectic;
