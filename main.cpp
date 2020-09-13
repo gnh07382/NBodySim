@@ -32,20 +32,6 @@ double lastFrame = 0.0f;
 int timestep;
 int stepsize = 16000;
 
-/*
-template <typename... M>
-void SaveMass(M... Mass)
-{
-    masslist.push_back(Mass);//error
-}
-
-template <typename... D>
-void SaveDist(D... Dist)
-{
-    distlist.push_back(Dist);
-}
-*/
-
 int main()
 {
     glfwInit();
@@ -79,41 +65,39 @@ int main()
 
     Shader Shader("planetvertex.glsl", "planetfrag.frag");
 
-    Model Model[5] = 
-    {
-        {"Celestials/Jupiter.obj"},
-        {"Celestials/Io.obj"},
-        {"Celestials/Europa.obj"},
-        {"Celestials/Ganymede.obj"},
-        {"Celestials/Callisto.obj"},
-    };
- 
-    std::vector<Planet> mod;
+    std::vector<Model> Model;
+
+    Model.push_back({ "Celestials/Jupiter.obj" });
+    Model.push_back({ "Celestials/Io.obj" });
+    Model.push_back({ "Celestials/Europa.obj" });
+    Model.push_back({ "Celestials/Ganymede.obj" });
+    Model.push_back({ "Celestials/Callisto.obj" });
+
+    std::vector<Planet> planet;
 
     //SI unit 쓰기(kg, m)
     //순서: 이름 질량 자전속도(rad/s) AxialTilt 지름 위치 속도 
-    Planet planet[5] = 
-    {
-        {"Jupiter", 1.89813e+27, 0.00017585, glm::dvec3(0.0, 0.0, 0.0), 71492000.0,
-        glm::dvec3(1.339363988310993E+05,  9.092405264331063E+04,  5.073445722988616E+03),
-        glm::dvec3(-1.217066061792022E-00,  4.484495409373950E-01, -2.501334739871315E-04)},
+    
+    planet.push_back({ "Jupiter", 1.89813e+27, 0.00017585, glm::dvec3(0.0, 0.0, 0.0), 71492000.0,
+    glm::dvec3(1.339363988310993E+05,  9.092405264331063E+04,  5.073445722988616E+03),
+    glm::dvec3(-1.217066061792022E-00,  4.484495409373950E-01, -2.501334739871315E-04) });
         
-        {"Io", 8.919e+22, 0.0, glm::dvec3(0.0, 0.0, 0.0), 1821300.0, 
-        glm::dvec3(1.783588628428087E+08, -3.813132022198399E+08, -1.122969170963552E+07), 
-        glm::dvec3(1.575622234571306E+04,  7.274824411696751E+03,  5.017042541746966E+02)},
+    planet.push_back({ "Io", 8.919e+22, 0.0, glm::dvec3(0.0, 0.0, 0.0), 1821300.0,
+    glm::dvec3(1.783588628428087E+08, -3.813132022198399E+08, -1.122969170963552E+07),
+    glm::dvec3(1.575622234571306E+04,  7.274824411696751E+03,  5.017042541746966E+02) });
         
-        {"Europa", 4.799e+22, 0.0, glm::dvec3(0.0, 0.0, 0.0), 1565000.0, 
-         glm::dvec3(1.090756855262995E+08,  6.563612022517135E+08,  2.839224074616516E+07),
-         glm::dvec3(-1.364656326617821E+04,  2.353365332781587E+03, -2.039139274185915E+02)},
+    planet.push_back({ "Europa", 4.799e+22, 0.0, glm::dvec3(0.0, 0.0, 0.0), 1565000.0,
+     glm::dvec3(1.090756855262995E+08,  6.563612022517135E+08,  2.839224074616516E+07),
+     glm::dvec3(-1.364656326617821E+04,  2.353365332781587E+03, -2.039139274185915E+02) });
         
-        {"Ganymede", 1.482e+23, 0.0, glm::dvec3(0.0, 0.0, 0.0), 2634000.0,
-         glm::dvec3(-4.970886905251951E+08, -9.460581334912166E+08, -4.271837978299236E+07),
-         glm::dvec3(9.645972005561218E+03, -5.046466898601443E+03, -6.028417363952232E+01)},
+    planet.push_back({ "Ganymede", 1.482e+23, 0.0, glm::dvec3(0.0, 0.0, 0.0), 2634000.0,
+     glm::dvec3(-4.970886905251951E+08, -9.460581334912166E+08, -4.271837978299236E+07),
+     glm::dvec3(9.645972005561218E+03, -5.046466898601443E+03, -6.028417363952232E+01) });
         
-        {"Callisto", 1.076e+23, 0.0, glm::dvec3(0.0, 0.0, 0.0), 2403000.0,
-         glm::dvec3(-1.875550445329819E+09, -2.777401160541600E+08, -3.403549534719028E+07),
-         glm::dvec3(1.199591768065817E+03, -8.051860690784368E+03, -2.380699073063166E+02)}
-    };
+    planet.push_back({ "Callisto", 1.076e+23, 0.0, glm::dvec3(0.0, 0.0, 0.0), 2403000.0,
+     glm::dvec3(-1.875550445329819E+09, -2.777401160541600E+08, -3.403549534719028E+07),
+     glm::dvec3(1.199591768065817E+03, -8.051860690784368E+03, -2.380699073063166E+02) });
+    
 
     std::vector<double> masslist;
     std::vector<glm::dvec3> distlist;
@@ -139,25 +123,19 @@ int main()
         Shader.setMat4("projection", projection);
         Shader.setMat4("view", view);
 
-        glm::dmat4 model[5];
-        for (int i = 0; i < 5; i++)
+        std::vector<glm::dmat4> model;
+        for (auto const [m, p, M] : boost::combine(model, planet, Model))
         {
-            model[i] = glm::dmat4(1.0f);
-            model[i] = glm::translate(model[i], planet[i].PositionPredict.at(timestep));
-            model[i] = glm::scale(model[i], glm::dvec3(planet[i].Radius, planet[i].Radius, planet[i].Radius));
-            Shader.setMat4("model", model[i]);
-            Model[i].Draw(Shader);
-            /*
-            CDE방식으로 움직일 꺼니까 좀 더 생각해보고 구현하기,
-            예측선 함수 만들기
-            move 클래스 수정, ephemeris 코드 수정(전체 데이터 받느 부분이 이상함)
-            */
+            m = glm::dmat4(1.0);
+            m = glm::translate(m, p.PositionPredict.at(timestep));
+            m = glm::scale(m, glm::dvec3(p.Radius, p.Radius, p.Radius));
+            Shader.setMat4("model", m);
+            M.Draw(Shader);
         }
+
         if (!calculated)
         {
-            for (int j = 0; j < 5; j++)
-                space.Ephemeris(planet[j], stepsize, planet, 5);
-            
+            space.Ephemeris(timestep, planet);
             calculated = true;
         }
 

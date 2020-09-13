@@ -5,7 +5,7 @@ Space::Space(double StepSize)
 	this->StepSize = StepSize;
 	ReferenceFramePos = InitReferenceFrame;
 }
-void Space::Ephemeris(int TimeStep, std::vector<Planet>& planet, int planetnum)
+void Space::Ephemeris(int TimeStep, std::vector<Planet>& planet)
 {
 	static std::vector<double> masslist;
 	std::vector<glm::dvec3> distlist;

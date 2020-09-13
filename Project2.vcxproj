@@ -121,6 +121,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\soft_kitty\source\boost_1_74_0</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\soft_kitty\source\boost_1_74_0</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="CelestialBody.h" />
+    <ClInclude Include="DrawLines.h" />
     <ClInclude Include="Integrator.hpp" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
