@@ -39,15 +39,15 @@ private:
     }
 
 public:
-	DrawLines(std::vector<data> line)
+	DrawLines(std::vector<data> line) : vertices(line)
     {
-        
+        setupMesh();
     }
     void drawline(Shader& shader)
     {
         glUseProgram(shader);
         glBindVertexArray(VAO);
-        glDrawArrays();
+        glDrawArrays(GL_LINES, 0, 3);
     }
 
     std::vector<data> vertices;
